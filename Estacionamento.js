@@ -213,7 +213,7 @@ function Registrar()
     }
     else
     {
-        valor= (tarifav/2.0)*tempo
+        valor= (tarifav/2.0)*tempo+(tarifav*1)
     }
 
     if(entrada=="" || cor=="" || modelo=="" || placa=="" || saida=="" || data=="")

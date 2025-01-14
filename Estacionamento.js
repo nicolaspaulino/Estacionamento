@@ -8,21 +8,22 @@ function Autenticar()
     
     let nome = document.createElement("INPUT");
     nome.setAttribute("type", "text");
-    nome.setAttribute("id","nome");
-    nome.setAttribute("class","Preenchimento")
-    nome.setAttribute("placeholder","Insira seu nome aqui!");
+    nome.setAttribute("id", "nome");
+    nome.setAttribute("class", "form-control my-2");
+    nome.setAttribute("placeholder", "Insira seu nome aqui!");
     document.getElementById("myForm").appendChild(nome);
     
     let senha = document.createElement("INPUT");
-    senha.setAttribute("type","password");
-    senha.setAttribute("id","senha");
-    senha.setAttribute("class","Preenchimento");
-    senha.setAttribute("placeholder","Insira a senha aqui");
+    senha.setAttribute("type", "password");
+    senha.setAttribute("id", "senha");
+    senha.setAttribute("class", "form-control my-2");
+    senha.setAttribute("placeholder", "Insira a senha aqui");
     document.getElementById("myForm").appendChild(senha);
   
-    let entrar= document.createElement("INPUT");
+    let entrar = document.createElement("INPUT");
     entrar.setAttribute("type", "submit");
-    entrar.setAttribute("class", "Entrada");
+    entrar.setAttribute("class", "btn btn-success mt-3");
+    entrar.setAttribute("value", "Entrar");
     entrar.setAttribute("onclick", "entrar()");
     document.getElementById("myForm").appendChild(entrar);
 }
@@ -48,9 +49,10 @@ function entrar()
         Boasvindas.innerHTML="Seja bem-vinda(o), " + name + "."
         document.body.appendChild(Boasvindas)
         
-        let janelaPri= document.createElement("DIV")
-        janelaPri.setAttribute("id","corpot")
-        document.body.appendChild(janelaPri)
+        let janelaPri = document.createElement("DIV");
+        janelaPri.setAttribute("id", "corpot");
+        janelaPri.setAttribute("class", "container mt-5");
+        document.body.appendChild(janelaPri);
 
         let tarifa= document.createElement("INPUT")
         tarifa.setAttribute("id", "tarifa")
@@ -70,11 +72,28 @@ function entrar()
         document.getElementById("corpot").appendChild(dataT)
 
         let data= document.createElement("INPUT")
-        data.setAttribute("class","Preenchimento")
+        data.setAttribute("class","Preenchimento()")
         data.setAttribute("id","data")
         data.setAttribute("name","data")
         data.setAttribute("type","date")
         document.getElementById("corpot").appendChild(data)
+
+        let selec= document.createElement("LABEL")
+        selec.setAttribute("for","selecao")
+        selec.innerHTML="Convenios: "
+        document.getElementById("corpot").appendChild(selec)
+
+        let selecao= document.createElement("SELECT")
+        selecao.setAttribute("id","selecao")
+        selecao.setAttribute("name","selecao")
+        document.getElementById("corpot").appendChild(selecao)
+
+        let opcaoDefault = document.createElement("OPTION");
+        opcaoDefault.setAttribute("value", "0");
+        opcaoDefault.setAttribute("selected", true);
+        opcaoDefault.textContent = "Sem convênio";
+        selecao.appendChild(opcaoDefault);
+        loadConv()
 
         let Entrada= document.createElement("H1")
         Entrada.innerHTML= "Entrada de novos veiculos: "
@@ -142,18 +161,11 @@ function entrar()
         let Registrar= document.createElement("BUTTON")
         Registrar.innerHTML="Registrar"
         Registrar.setAttribute("onclick","Registrar()")
-        Registrar.setAttribute("class","Entrada")
+        Registrar.setAttribute("class","btn btn-success mt-3")
         document.getElementById("corpot").appendChild(Registrar)
     
-                        
-        let Excluir= document.createElement("BUTTON")
-        Excluir.innerHTML="Excluir"
-        Excluir.setAttribute("onclick","excluir()")
-        Excluir.setAttribute("class","Entrada")
-        document.getElementById("corpot").appendChild(Excluir)
-
         let tabela= document.createElement("TABLE")
-        tabela.setAttribute("Border","1px")
+        tabela.setAttribute("class", "table table-striped table-hover mt-4");
         tabela.setAttribute("id","tabela")
         document.getElementById("corpot").appendChild(tabela)
 
@@ -195,78 +207,101 @@ function entrar()
         document.getElementById("TR").appendChild(Coluna7)
     }
 }
-function Registrar()
-{    
-    let data= document.getElementById("data").value
-    let placa= document.getElementById("placa").value
-    let modelo=document.getElementById("modelo").value
-    let cor= document.getElementById("cor").value
-    let entrada= parseInt(document.getElementById("hora").value)
-    let saida= parseInt(document.getElementById("saida").value)
-    let tarifav= document.getElementById("tarifa").value
-    let tempo= saida-entrada
+let tickets = [];
 
-    let valor
-    if(tempo==1)
-    {
-        valor= tarifav
+function Registrar() {    
+    let dataStr = document.getElementById("data").value
+    let placa = document.getElementById("placa").value
+    let modelo = document.getElementById("modelo").value
+    let cor = document.getElementById("cor").value
+    let entrada = parseInt(document.getElementById("hora").value)
+    let saida = parseInt(document.getElementById("saida").value)
+    let tarifav = parseFloat(document.getElementById("tarifa").value)
+    let desconto = parseFloat(document.getElementById("selecao").value)
+
+    if (!dataStr) {
+        alert("Insira a data!");
+        
+    }
+    else if (entrada == "" || cor == "" || modelo == "" || placa == "" || saida == "") {
+        alert("Insira os espaços vazios");
+        
+    }
+    else if (saida <= entrada) {
+        alert("A hora de saída deve ser maior que a de entrada!");
     }
     else
     {
-        valor= (tarifav/2.0)*tempo+(tarifav*1)
-    }
+    let partesData = dataStr.split("-");
+    let data = new Date(partesData[0], partesData[1] - 1, partesData[2]);
 
-    if(entrada=="" || cor=="" || modelo=="" || placa=="" || saida=="" || data=="")
-    {
-        alert("Insira os espaços vazios")
+    let tempo = saida - entrada;
+
+    let valor;
+    if (tempo == 1) {
+        valor = tarifav;
+    } else {
+        valor = (tarifav / 2.0) * (tempo - 1) + (tarifav * 1);
     }
-    else if(saida<entrada || saida==entrada)
-    {
-        alert("O valor da saida deve ser maiorque o valor de entrada")
-    }
-    else
-    {
-    var tabela = document.getElementById("tabela");
-    var row = tabela.insertRow(1);
-    var celula0 = row.insertCell();
-    var celula1 = row.insertCell();
-    var celula2 = row.insertCell();
-    var celula3 = row.insertCell();
-    var celula4 = row.insertCell();
-    var celula5 = row.insertCell();
-    var celula6 = row.insertCell();
-    var celula7 = row.insertCell();
-    
-    celula0.innerHTML = document.getElementById("data").value
-    celula1.innerHTML = document.getElementById("placa").value
-    celula2.innerHTML = document.getElementById("modelo").value
-    celula3.innerHTML = document.getElementById("cor").value
-    celula4.innerHTML = document.getElementById("hora").value
-    celula5.innerHTML=  document.getElementById("saida").value
-    celula6.innerHTML= tempo
-    celula7.innerHTML = valor
+    valorfinal= valor - valor*(desconto/100.0)
+
+    let ticket = {
+        data: data.toLocaleDateString("pt-BR"),
+        placa,
+        modelo,
+        cor,
+        entrada: entrada + ":00",
+        saida: saida + ":00",
+        tempo: tempo + " hora(s)",
+        valor: "R$ " + valorfinal.toFixed(2)
+    };
+
+    tickets.push(ticket);
+    atualizarTabela();
     }
 }
-function excluir()
-{
-    if(tabela.rows.length > 1)
-    {
-        let linha= prompt("Qual linha deseja excluir?")
-        let tabela= document.getElementById("tabela")
-        if (linha==0)
-        {
-            alert("Essa linha não pode ser excluida.")
-        }
-        else 
-        {
-            tabela.deleteRow(linha)
-        }
-    }
-    else
-    {
-        alert("Não existem linhas para remover!")
+
+function atualizarTabela() {
+    let corpoTabela = document.getElementById("corpoTable");
+    corpoTabela.innerHTML = "";
+
+    tickets.forEach((ticket, index) => {
+        let row = corpoTabela.insertRow();
+        let celula0 = row.insertCell();
+        let celula1 = row.insertCell();
+        let celula2 = row.insertCell();
+        let celula3 = row.insertCell();
+        let celula4 = row.insertCell();
+        let celula5 = row.insertCell();
+        let celula6 = row.insertCell();
+        let celula7 = row.insertCell();
+        let celula8 = row.insertCell(); 
+
+        celula0.innerHTML = ticket.data
+        celula1.innerHTML = ticket.placa
+        celula2.innerHTML = ticket.modelo
+        celula3.innerHTML = ticket.cor
+        celula4.innerHTML = ticket.entrada
+        celula5.innerHTML = ticket.saida
+        celula6.innerHTML = ticket.tempo
+        celula7.innerHTML = ticket.valor
+
+        let excluirBtn = document.createElement("button");
+        excluirBtn.innerText = "Excluir";
+        excluirBtn.onclick = () => excluir(index);
+        celula8.appendChild(excluirBtn); 
+    });
+}
+
+function excluir(index) {
+    if (index >= 0 && index < tickets.length) {
+        tickets.splice(index, 1);
+        atualizarTabela();
+    } else {
+        alert("Índice inválido!");
     }
 }
+
 function Funcionario()
 {
     document.getElementById("inicio").innerHTML= "<h2>Registro:</h2>"
@@ -279,13 +314,13 @@ function Funcionario()
     nome.setAttribute("name","nome")
     nome.setAttribute("type", "text")
     nome.setAttribute("id","nomef")
-    nome.setAttribute("class","Preenchimento");
-    nome.setAttribute("placeholder", "Insira o seu nome")
+    nome.setAttribute("class","form-control my-2");
+    nome.setAttribute("placeholder", "Insira o seu nome aqui!")
     document.getElementById("Funcionario").appendChild(nome)
 
     let entrarfu = document.createElement("INPUT")
     entrarfu.setAttribute("type","submit")
-    entrarfu.setAttribute("class","Entrada")
+    entrarfu.setAttribute("class","btn btn-success mt-3")
     entrarfu.setAttribute("onclick","entrarfu()")
     document.getElementById("Funcionario").appendChild(entrarfu)
 
@@ -307,9 +342,10 @@ function entrarfu()
         Boasvindas.innerHTML="Seja bem-vinda(o), " + name + "."
         document.body.appendChild(Boasvindas)
 
-        let janelaPri= document.createElement("DIV")
-        janelaPri.setAttribute("id","corpot")
-        document.body.appendChild(janelaPri)
+        let janelaPri = document.createElement("DIV");
+        janelaPri.setAttribute("id", "corpot");
+        janelaPri.setAttribute("class", "container mt-5");
+        document.body.appendChild(janelaPri);
 
         let tarifalabel = document.createElement("LABEL")
         tarifalabel.setAttribute("for","name")
@@ -340,6 +376,23 @@ function entrarfu()
         data.setAttribute("id","data")
         data.setAttribute("type","date")
         document.getElementById("corpot").appendChild(data)
+
+        let selec= document.createElement("LABEL")
+        selec.setAttribute("for","selecao")
+        selec.innerHTML="Convenios: "
+        document.getElementById("corpot").appendChild(selec)
+
+        let selecao= document.createElement("SELECT")
+        selecao.setAttribute("id","selecao")
+        selecao.setAttribute("name","selecao")
+        document.getElementById("corpot").appendChild(selecao)
+        
+        let opcaoDefault = document.createElement("OPTION");
+        opcaoDefault.setAttribute("value", "0");
+        opcaoDefault.setAttribute("selected", true);
+        opcaoDefault.textContent = "Sem convênio";
+        selecao.appendChild(opcaoDefault);
+        loadConv()
 
         let Entrada= document.createElement("H1")
         Entrada.innerHTML= "Entrada de novos veiculos: "
@@ -408,17 +461,11 @@ function entrarfu()
         let Registrar= document.createElement("BUTTON")
         Registrar.innerHTML="Registrar"
         Registrar.setAttribute("onclick","Registrar()")
-        Registrar.setAttribute("class","Entrada")
+        Registrar.setAttribute("class","btn btn-success mt-3")
         document.getElementById("corpot").appendChild(Registrar)
 
-        let Excluir= document.createElement("BUTTON")
-        Excluir.innerHTML="Excluir"
-        Excluir.setAttribute("onclick","excluir()")
-        Excluir.setAttribute("class","Entrada")
-        document.getElementById("corpot").appendChild(Excluir)
-
         let tabela= document.createElement("TABLE")
-        tabela.setAttribute("Border","1px")
+        tabela.setAttribute("class", "table table-striped table-hover mt-4");
         tabela.setAttribute("id","tabela")
         document.getElementById("corpot").appendChild(tabela)
 
@@ -483,4 +530,38 @@ function mudar()
             document.getElementById("tarifa").value=valorTarifa
         }
     }
+}
+function loadConv()
+{   
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "Estacionamento.xml", true);
+    xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+            carregarXML(this);
+        }
+    }
+
+    xmlhttp.send();
+}
+function carregarXML(convenios)
+{
+
+   var i;
+   var xmlDoc = convenios.responseXML;
+   var convenioXML = xmlDoc.getElementsByTagName("CONVENIO");
+
+ 
+
+   for (i = 0; i < convenioXML.length; i++)
+   {    
+       var nome = convenioXML[i].getElementsByTagName("NOME")[0].childNodes[0].nodeValue;
+       var desconto = convenioXML[i].getElementsByTagName("DESCONTO")[0].childNodes[0].nodeValue;
+
+
+       var opcao = document.createElement("OPTION");
+       opcao.setAttribute("value", desconto);
+       opcao.textContent = nome;
+       document.getElementById("selecao").appendChild(opcao)
+   }
+   
 }

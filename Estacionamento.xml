@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONVENIOS>
+    <CONVENIO>
+        <NOME>CAR GO!</NOME>
+        <DESCONTO>10</DESCONTO>
+    </CONVENIO>
+     <CONVENIO>
+        <NOME>PK PRICELESS</NOME>
+        <DESCONTO>25</DESCONTO>
+    </CONVENIO>
+     <CONVENIO>
+        <NOME>SAFED TIRE</NOME>
+        <DESCONTO>15</DESCONTO>
+    </CONVENIO>
+</CONVENIOS>

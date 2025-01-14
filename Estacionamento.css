@@ -35,23 +35,14 @@ color: aliceblue;
     height: 24px;
     font-size: 0.75em;
 }
-.Entrada
-{
-width: 20%;
-font-size: 0.7em;
-border-color: white;
-background-color: rgb(255, 235, 56);
-margin: 3px;
-}
 ::placeholder
 {
     color: rgb(0, 0, 0);
 }
 #tabela
 {
-
     font-size: 1.4em;
     margin: auto;
-    margin-top: 3%;
+    margin-top: 2%;
     margin-bottom: 1%;
 }
